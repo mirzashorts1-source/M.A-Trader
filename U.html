@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.A Traders - By Surgical Items</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #app-container { transition: opacity 0.3s ease-in-out; }
+        .fade-out { opacity: 0; }
+        .fade-in { opacity: 1; }
+        #edit-modal { display: none; }
+        #edit-modal.active { display: flex; }
+        .bg-primary { background-color: #1A365D; }
+        .text-primary { color: #1A365D; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#home" class="text-2xl font-bold text-blue-900 tracking-tight">M.A Traders</a>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">Home</a>
+                    <a href="#catalogue" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">Catalogue</a>
+                    <a href="#contact" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">Contact</a>
+                    <button onclick="openEditModal(null)" class="bg-blue-600 text-white px-4 py-2 rounded-md font-bold hover:bg-blue-700 transition shadow-md">
+                        + Add New Item
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-container" class="flex-grow w-full fade-in"></main>
+
+    <footer style="background: #1a3a5f; color: white; padding: 40px 20px; margin-top: 50px; font-family: 'Segoe UI', sans-serif; border-top: 5px solid #2980b9;" class="no-print">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div>
+                <h3 style="color: #3498db; border-bottom: 2px solid #3498db; display: inline-block; margin-bottom: 15px;">M.A TRADERS</h3>
+                <p style="font-size: 14px; line-height: 1.6; color: #bdc3c7;">
+                    M.A Traders is a leading distribution house in Sahiwal, specializing in premium quality <strong>Surgical Disposables and Sutures</strong>. We are proud partners of world-class brands like <strong>Ethicon</strong> and <strong>Demetech</strong>.
+                </p>
+            </div>
+            <div>
+                <h3 style="color: #3498db; border-bottom: 2px solid #3498db; display: inline-block; margin-bottom: 15px;">Contact Us</h3>
+                <p style="font-size: 14px; margin: 10px 0;">📍 <strong>Address:</strong> Faisalabad Road, Sahiwal</p>
+                <p style="font-size: 14px; margin: 10px 0;">📞 Phone: <a href="tel:+92 3016929697" style="color: #58CCED; text-decoration: underline;">+92 3016929697</a></p>
+                <p style="font-size: 14px; margin: 10px 0;">📧 Email: <a href="mailto:altaf.mnp2@gmail.com" style="color: #58CCED; text-decoration: underline;">altaf.mnp2@gmail.com</a></p>
+                <a href="https://wa.me/923016929697" target="_blank" style="display: inline-flex; align-items: center; background: #25d366; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 10px;">
+                    <span style="margin-right: 8px;">💬</span> WhatsApp Chat
+                </a>
+            </div>
+            <div>
+                <h3 style="color: #3498db; border-bottom: 2px solid #3498db; display: inline-block; margin-bottom: 15px;">Expertise</h3>
+                <ul style="list-style: none; padding: 0; font-size: 14px; color: #bdc3c7;">
+                    <li>✔️ Cardiovascular Sutures</li>
+                    <li>✔️ Specialized IV Cannulas</li>
+                    <li>✔️ Hospital Bulk Supplies</li>
+                    <li>✔️ General Surgical Disposables</li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #7f8c8d;">
+            <p>© 2026 M.A Traders - Sahiwal. All Rights Reserved. | Managed by M.A Traders Team</p>
+        </div>
+    </footer>
+
+    <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-60 z-[100] items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 overflow-y-auto max-h-[90vh]">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4 text-blue-900">Product Management</h2>
+            
+            <div class="space-y-4">
+                <input type="hidden" id="edit-id">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Product Name</label>
+                    <input type="text" id="edit-name" placeholder="e.g. Silk Suture 2/0" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Category</label>
+                    <select id="edit-cat" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="Sutures">Sutures</option>
+                        <option value="Disposables">Disposables</option>
+                        <option value="Instruments">Instruments</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-blue-600">Upload Photo (From Browser)</label>
+                    <input type="file" id="edit-file" accept="image/*" class="w-full border-dashed border-2 border-blue-100 p-4 rounded text-sm cursor-pointer hover:bg-blue-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Short Description</label>
+                    <input type="text" id="edit-short" placeholder="Brief tagline..." class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Full Technical Detail</label>
+                    <textarea id="edit-full" rows="3" placeholder="Explain material, usage, and specs..." class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-6 flex space-x-3">
+                <button onclick="saveProduct()" class="flex-1 bg-blue-900 text-white font-bold py-3 rounded hover:bg-blue-800 transition">Save Changes</button>
+                <button onclick="closeModal()" class="flex-1 bg-gray-200 text-gray-800 font-bold py-3 rounded hover:bg-gray-300 transition">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        // Updated to use CDN links so they work directly in HTML without a bundler
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+        
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyD4sRJOZllNhAzvUzPMuDDyIh3Ebchs7DM",
+          authDomain: "matraders5.firebaseapp.com",
+          databaseURL: "https://matraders5-default-rtdb.firebaseio.com",
+          projectId: "matraders5",
+          storageBucket: "matraders5.firebasestorage.app",
+          messagingSenderId: "914297072385",
+          appId: "1:914297072385:web:d1ff8561f4dc841d8f8900",
+          measurementId: "G-2P891VLFEK"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        // Make app available globally if needed by your other scripts
+        window.firebaseApp = app;
+    </script>
+
+    <script>
+        
+    // 1. INITIAL DATA & SETUP
+    let products = JSON.parse(localStorage.getItem('ma_traders_data')) || [
+        {
+            id: "default-1",
+            name: "Premium Silk Sutures",
+            category: "Sutures",
+            image: "https://images.unsplash.com/photo-1584362917165-526a968579e8?auto=format&fit=crop&q=80&w=800",
+            shortDesc: "High-tensile, sterile braided silk.",
+            fullDesc: "Our premium silk sutures are braided and specially coated for smooth tissue passage. Designed for precise surgical procedures."
+        }
+    ];
+
+    const appContainer = document.getElementById('app-container');
+    let base64Image = "";
+
+    // Image Upload Logic
+    document.getElementById('edit-file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => base64Image = event.target.result;
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 2. MODAL & CRUD LOGIC
+    function openEditModal(id = null) {
+        base64Image = ""; 
+        document.getElementById('edit-file').value = "";
+        
+        if (id) {
+            const p = products.find(item => item.id === id);
+            document.getElementById('modal-title').innerText = "Edit Product";
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('edit-name').value = p.name;
+            document.getElementById('edit-cat').value = p.category;
+            document.getElementById('edit-short').value = p.shortDesc;
+            document.getElementById('edit-full').value = p.fullDesc;
+            base64Image = p.image;
+        } else {
+            document.getElementById('modal-title').innerText = "Add New Product";
+            document.getElementById('edit-id').value = "";
+            document.getElementById('edit-name').value = "";
+            document.getElementById('edit-short').value = "";
+            document.getElementById('edit-full').value = "";
+        }
+        document.getElementById('edit-modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('edit-modal').classList.remove('active');
+    }
+
+    function saveProduct() {
+        const id = document.getElementById('edit-id').value;
+        const newProd = {
+            id: id || 'prod-' + Date.now(),
+            name: document.getElementById('edit-name').value || "Unnamed Item",
+            category: document.getElementById('edit-cat').value,
+            image: base64Image || "https://via.placeholder.com/400?text=No+Image",
+            shortDesc: document.getElementById('edit-short').value,
+            fullDesc: document.getElementById('edit-full').value
+        };
+
+        if (id) {
+            const idx = products.findIndex(p => p.id === id);
+            products[idx] = newProd;
+        } else {
+            products.push(newProd);
+        }
+
+        localStorage.setItem('ma_traders_data', JSON.stringify(products));
+        closeModal();
+        router();
+    }
+
+    function deleteProduct(e, id) {
+        e.stopPropagation();
+        if(confirm("Are you sure you want to remove this item?")) {
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('ma_traders_data', JSON.stringify(products));
+            router();
+        }
+    }
+
+    // 3. PAGE RENDERS
+    function renderHome() {
+        appContainer.innerHTML = `
+            <div class="bg-primary text-white py-24 px-4 text-center">
+                <h1 class="text-5xl font-extrabold mb-6 tracking-tight">Precision Engineered for Excellence</h1>
+                <p class="text-xl max-w-2xl mx-auto mb-10 opacity-90 text-blue-100">Sahiwal's most trusted partner for high-quality surgical disposables and sutures. Managed by professionals.</p>
+                <div class="flex justify-center gap-4">
+                    <a href="#catalogue" class="bg-white text-blue-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition">Browse Products</a>
+                    <button onclick="openEditModal(null)" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-600 transition">Add More Items</button>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto py-20 px-4 grid md:grid-cols-3 gap-8 text-center">
+                <div class="p-8 bg-white rounded-xl shadow-sm border">
+                    <div class="text-3xl mb-4 text-blue-600 font-bold">✓ Quality</div>
+                    <p class="text-gray-500">ISO Certified products for maximum reliability.</p>
+                </div>
+                <div class="p-8 bg-white rounded-xl shadow-sm border">
+                    <div class="text-3xl mb-4 text-blue-600 font-bold">🚀 Fast</div>
+                    <p class="text-gray-500">Rapid delivery across Sahiwal.</p>
+                </div>
+                <div class="p-8 bg-white rounded-xl shadow-sm border">
+                    <div class="text-3xl mb-4 text-blue-600 font-bold">🤝 Trusted</div>
+                    <p class="text-gray-500">Partners of Ethicon, Demetech and more.</p>
+                </div>
+            </div>`;
+    }
+
+    function renderCatalogue(filter = 'All') {
+        const categories = ['All', 'Sutures', 'Disposables', 'Instruments', 'General'];
+        const filtered = filter === 'All' ? products : products.filter(p => p.category === filter);
+
+        appContainer.innerHTML = `
+            <div class="max-w-7xl mx-auto px-4 py-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-8 uppercase tracking-wide border-l-8 border-blue-900 pl-4">Product Catalogue</h2>
+                
+                <div class="flex space-x-3 mb-12 overflow-x-auto pb-2">
+                    ${categories.map(cat => `
+                        <button onclick="renderCatalogue('${cat}')" 
+                            class="px-6 py-2 rounded-full font-bold transition duration-200 ${filter === cat ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}">
+                            ${cat}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    ${filtered.map(p => `
+                        <div class="bg-white rounded-2xl shadow hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden group cursor-pointer" onclick="window.location.hash='product-${p.id}'">
+                            <div class="h-64 relative overflow-hidden">
+                                <img src="${p.image}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" ondblclick="openEditModal('${p.id}')">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition">
+                                    <span class="text-white font-bold opacity-0 group-hover:opacity-100 bg-blue-600 px-3 py-1 rounded">Double-Click to Edit</span>
+                                </div>
+                                <button onclick="deleteProduct(event, '${p.id}')" class="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition hover:bg-red-700">🗑️</button>
+                            </div>
+                            <div class="p-6">
+                                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">${p.category}</span>
+                                <h3 class="text-xl font-bold mt-2 text-gray-900">${p.name}</h3>
+                                <p class="text-gray-500 text-sm mt-3 line-clamp-2">${p.shortDesc || ''}</p>
+                                <div class="mt-5 text-blue-900 font-bold flex items-center">View Specs <span class="ml-2">→</span></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+    }
+
+    function renderProductDetail(id) {
+        const p = products.find(item => item.id === id);
+        if (!p) return renderHome();
+        appContainer.innerHTML = `
+            <div class="max-w-5xl mx-auto p-8 md:p-12 bg-white mt-10 rounded-2xl shadow-xl border border-gray-100">
+                <a href="#catalogue" class="text-blue-600 font-bold mb-8 block hover:translate-x-[-5px] transition inline-block">← Back to Catalogue</a>
+                <div class="flex flex-col md:row gap-12">
+                    <div class="md:w-1/2">
+                        <img src="${p.image}" class="w-full rounded-2xl shadow-lg border">
+                    </div>
+                    <div class="md:w-1/2">
+                        <span class="text-blue-600 font-bold uppercase tracking-widest">${p.category}</span>
+                        <h1 class="text-4xl font-extrabold text-gray-900 mt-2 mb-6">${p.name}</h1>
+                        <p class="text-gray-700 text-lg leading-relaxed mb-8">${p.fullDesc || 'Details for this surgical item are being updated.'}</p>
+                        
+                        <div class="space-y-4">
+                            <button onclick="openEditModal('${p.id}')" class="w-full bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-800 transition shadow-lg">Edit Details</button>
+                            <a href="https://wa.me/923016929697?text=Inquiry about ${p.name}" class="w-full block text-center border-2 border-green-500 text-green-600 font-bold py-4 rounded-xl hover:bg-green-50 transition">Inquire on WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    function renderContact() {
+        appContainer.innerHTML = `
+            <div class="max-w-7xl mx-auto px-4 py-16">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-extrabold text-gray-900 uppercase">Contact M.A Traders</h1>
+                    <p class="text-gray-500 mt-2">Professional support for healthcare facilities.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 bg-white rounded-3xl shadow-xl overflow-hidden border">
+                    <div class="p-10">
+                        <form onsubmit="event.preventDefault(); alert('Request Sent! Our team will contact you soon.');" class="space-y-6">
+                            <div><label class="block text-sm font-bold mb-2">Facility Name</label><input type="text" required class="w-full p-3 bg-gray-50 border rounded-lg"></div>
+                            <div><label class="block text-sm font-bold mb-2">Contact Person</label><input type="text" required class="w-full p-3 bg-gray-50 border rounded-lg"></div>
+                            <div><label class="block text-sm font-bold mb-2">Your Email</label><input type="email" required class="w-full p-3 bg-gray-50 border rounded-lg"></div>
+                            <div><label class="block text-sm font-bold mb-2">Inquiry Details</label><textarea rows="4" class="w-full p-3 bg-gray-50 border rounded-lg"></textarea></div>
+                            <button type="submit" class="w-full bg-blue-900 text-white font-bold py-4 rounded-lg hover:bg-blue-800 transition">Send Inquiry</button>
+                        </form>
+                    </div>
+                    <div class="bg-gray-100 flex flex-col h-full min-h-[400px]">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54756.41724483713!2d73.07689916946654!3d30.662283944641666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3922b62464738605%3A0xc391b7d59048a609!2sSahiwal%2C%20Sahiwal%20District%2C%20Punjab!5e0!3m2!1sen!2spk!4v1710000000000!5m2!1sen!2spk" 
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    // 4. ROUTER LOGIC
+    function router() {
+        appContainer.classList.remove('fade-in');
+        appContainer.classList.add('fade-out');
+
+        setTimeout(() => {
+            const hash = window.location.hash;
+            window.scrollTo(0,0);
+            
+            if (hash === '#home' || hash === '') renderHome();
+            else if (hash === '#catalogue') renderCatalogue();
+            else if (hash === '#contact') renderContact();
+            else if (hash.startsWith('#product-')) renderProductDetail(hash.replace('#product-', ''));
+            else renderHome();
+
+            appContainer.classList.remove('fade-out');
+            appContainer.classList.add('fade-in');
+        }, 200);
+    }
+
+    window.addEventListener('hashchange', router);
+    window.addEventListener('load', router);
+    window.handleSave = async () => {
+    const btn = document.getElementById('save-btn');
+    btn.innerText = "Syncing...";
+    btn.disabled = true;
+
+    const id = document.getElementById('edit-id').value;
+    const file = document.getElementById('edit-file').files[0];
+    
+    // Default image agar upload fail ho jaye
+    let imageUrl = products.find(p => p.id === id)?.image || "https://via.placeholder.com/400?text=MA+Traders";
+
+    try {
+        // Sirf tab upload karein agar file select ki ho
+        if (file) {
+            try {
+                const storageRef = ref(storage, `inv/${Date.now()}_${file.name}`);
+                const upload = await uploadBytes(storageRef, file);
+                imageUrl = await getDownloadURL(upload.ref);
+            } catch (storageErr) {
+                console.log("Storage error (Plan Issue), using default image.");
+                alert("Storage full ya payment issue hai, lekin data save ho jayega.");
+            }
+        }
+
+        const data = {
+            name: document.getElementById('edit-name').value || "Unnamed Item",
+            category: document.getElementById('edit-cat').value,
+            image: imageUrl, // Purani image ya placeholder use hogi
+            shortDesc: document.getElementById('edit-short').value,
+            fullDesc: document.getElementById('edit-full').value
+        };
+
+        if (id) {
+            await updateDoc(doc(db, "products", id), data);
+        } else {
+            await addDoc(colRef, data);
+        }
+        closeModal();
+    } catch (err) {
+        alert("Database Error: " + err.message);
+    } finally {
+        btn.innerText = "Sync to Cloud";
+        btn.disabled = false;
+    }
+};
+    </script>
+    
+</body>
+</html>
